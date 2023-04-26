@@ -8,6 +8,7 @@ pipeline {
 
             // Aller dans app1 et construire l'image Docker
             dir('app1') {
+	       sh 'docker --version'
                sh 'docker build -t img-app1 .'
             }
 
