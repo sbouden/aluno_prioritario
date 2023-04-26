@@ -61,6 +61,7 @@ Ensuite plusieurs méthodes sont possibles:
 8. Ouvrir un navigateur web et aller sur http://localhost:8050 pour accéder à l'application Dash exécutée dans le conteneur Docker
 
 Réitérer les mêmes étapes pour accéder à la 2ème application:
+
 4. `cd app2`
 5. Vérifier avec `docker --version` que docker est installé sur votre machine
 6. Sur un terminal, `docker build -t nom_de_votre_image . `(le point est bien à mettre)
