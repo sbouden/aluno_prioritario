@@ -9,11 +9,13 @@ Ce dashboard pourrait se centrer autour d'un graphe permettant de visualiser l'e
 ## Choix techniques
 
 - Python
+- Pytest
 - Dash 
 - Jenkins (outil d'intégration continue et de déploiement continu (CI/CD))
 - Docker (conteneurisation)
 
 L'utilisation de Python et de Dash permet de développer rapidement une application interactive et facile à utiliser pour les utilisateurs. 
+Pytest est un framework de test pour Python et permet une intégration facile avec Jenkins.
 Jenkins facilite l'automatisation du processus de déploiement et de mise à jour de l'application, tandis que Docker facilite le déploiement de l'application sur différents environnements et serveurs.
 
 
@@ -27,8 +29,7 @@ Pour des contraintes de temps, l'inférence du modèle prédisant la notion de '
 - `app2/`: dossier contenant un deuxième script `clusters.py`: La visualisation de données est basée sur un modèle de clustering KMeans appliqué à l'ensemble de données d'étudiants. Les variables d'entrée peuvent être sélectionnées à l'aide de menus déroulants dans le tableau de bord. La visualisation des données est affichée dans un graphique interactif, qui peut être mis à jour en temps réel en fonction des choix de l'utilisateur dans les menus déroulants. Le graphique affiche les clusters et les centres de cluster pour les variables d'entrée sélectionnées.
 ![Logo](images/app2.png)
 
-
-- `notebooks/`: dossier contenant les notebooks utilisés pour explorer les données contenant 2 sous dossiers `01_exploration/` et `02_models/`
+- `notebooks/`: dossier contenant les notebooks utilisés pour explorer les données contenant 2 sous dossiers `01_exploration/` et `02_models/`. Les sorties sont laissées exprès pour visualiser les graphiques/figure depuis git lors de cette phase de POC.
 
 ## Installation
 
@@ -69,6 +70,10 @@ Réitérer les mêmes étapes pour accéder à la 2ème application:
 8. Ouvrir un navigateur web et aller sur http://127.0.0.1:8888/ pour accéder à l'application Dash exécutée dans le conteneur Docker
 
 ### Avec Jenkins
+Le `jenkinsfile.groovy` définit les étapes de la pipeline de déploiement. Celles-ci incluent l'installation de docker, la construction de l'image docker, la prise en compte du dockerfile et l'installation des prérequis, dépendances et l'exécution de l'application.
 
+4. Cloner le repo Git contenant le Jenkinsfile et le Dockerfile sur sa machine
+5. Créer un projet Jenkins pour cette pipeline. Cela peut être fait en passant par l'interface graphique du navigateur et en créant un nouveau projet Jenkins de type "Pipeline script from SCM". On peut y ajouter le script de la pipeline, qui sera stocké dans un SCM (comme Git) et Jenkins pourra le récupérer pour l'exécuter. 
+![Logo](images/build-pipeline.png)
 
-
+Si vous n'avez pas accès à l'interface web de votre serveur Jenkins pour lancer un build, vous pouvez utiliser la commande `jenkins build jenkinsfile.groovy`
