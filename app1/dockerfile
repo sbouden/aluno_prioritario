@@ -1,0 +1,33 @@
+# Utiliser une image de base existante
+FROM python:3.9.9-alpine
+
+# Se déplacer dans le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers du projet dans l'image Docker
+COPY . /app
+
+# Installer les dépendances du projet
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    ffmpeg libsm6 libxext6 \
+    software-properties-common \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Installez les dépendances
+RUN pip install --no-cache-dir -r requirements.txt 
+
+
+# Définir les variables d'environnement pour chaque application
+ENV APP1_PORT=8050
+
+# Exposez les ports des deux applications
+EXPOSE $APP1_PORT
+
+# Commande pour exécuter le script de démarrage
+CMD ["python", "-m", "aluno_prioritario1.py", "--port", "$APP1_PORT"]
+
+HEALTHCHECK CMD curl --fail http://localhost:$APP1_PORT/_stcore/health 
