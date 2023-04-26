@@ -22,24 +22,52 @@ Jenkins facilite l'automatisation du processus de déploiement et de mise à jou
 - `app1/`: dossier contenant un premier script `aluno_prioritario1.py`. permettant de lancer une première application permettant de visualiser l'ensemble des étudiants et la prédiction d'une variable symobilsant la complexité à les accompagner selon leur note finale mais aussi d'autres critères telles que l'implication des élèves, le soutien famiial etc... 
 A terme, l'utilisateur de l'application pourra saisir les caractéristiques d'un identifiant.
 Pour des contraintes de temps, l'inférence du modèle prédisant la notion de 'complexité' n'a pas encoe été réalisée et sera déployée dans une V2 permettant de mettre à jour le graphe de façon dynamique avec de nouvelles données saisies par l'utilisateur.
+![Logo](images/app1.png)
 
 - `app2/`: dossier contenant un deuxième script `clusters.py`: La visualisation de données est basée sur un modèle de clustering KMeans appliqué à l'ensemble de données d'étudiants. Les variables d'entrée peuvent être sélectionnées à l'aide de menus déroulants dans le tableau de bord. La visualisation des données est affichée dans un graphique interactif, qui peut être mis à jour en temps réel en fonction des choix de l'utilisateur dans les menus déroulants. Le graphique affiche les clusters et les centres de cluster pour les variables d'entrée sélectionnées.
+![Logo](images/app2.png)
+
 
 - `notebooks/`: dossier contenant les notebooks utilisés pour explorer les données contenant 2 sous dossiers `01_exploration/` et `02_models/`
 
 ## Installation
 
+Les premières étapes sont communes:
 1. Cloner le dépôt git: `git clone https://github.com/sbouden/aluno_prioritario.git`
 2. Naviguer dans le répertoire du projet: `cd aluno_prioritario`
-3. cd app1
-4. docker build -t ekinox-img .
-5. docker run -p 8050:8050 ekinox-img
-3. cd app2
-4. docker build -t ekinox-img .
-5. docker run -p 8050:8050 ekinox-img
+3. Changer de branche avec : `git checkout apps`
 
-## Utilisation
+Ensuite plusieurs méthodes sont possibles:
 
-1. Placer les données dans le dossier `data` (voir lien dans la description du projet)
-2. Dans app1: Lancer le script principal: `aluno_prioritario1.py`
-3. Ouvrir votre navigateur web à l'adresse indiquée par le script (généralement http://localhost:8501)
+### Avec la création d'un virtualenv et installation des prérequis
+1. `cd myenv`
+2. `virtualenv myenv`
+3. `source myenv/bin/activate`
+4. `pip install virtualenv`
+5. `pip install --upgrade packaging`
+6. `mkdir myenv`
+7. `cd myenv`
+8. `source myenv/bin/activate`
+9. Installer les dépendances avec `pip install --no-cache-dir -r app1/requirements.txt && pip install --no-cache-dir -r app2/requirements.txt`
+10. `cd app1` ou `cd app2`
+11. `python aluno_prioritario1.py` ou respectivement  `python clusters.py`
+
+
+### Avec Docker
+4. `cd app1`
+5. Vérifier avec `docker --version` que docker est installé sur votre machine
+6. Sur un terminal, `docker build -t nom_de_votre_image . ` (le point est bien à mettre)
+7. Lancer un conteneur à partir de cette image en utilisant : `docker run -p 8050:8050 nom_de_votre_image`
+8. Ouvrir un navigateur web et aller sur http://localhost:8050 pour accéder à l'application Dash exécutée dans le conteneur Docker
+
+Réitérer les mêmes étapes pour accéder à la 2ème application:
+4. `cd app2`
+5. Vérifier avec `docker --version` que docker est installé sur votre machine
+6. Sur un terminal, `docker build -t nom_de_votre_image . `(le point est bien à mettre)
+7. Lancer un conteneur à partir de cette image en utilisant : `docker run -p 8888:8888 nom_de_votre_image`
+8. Ouvrir un navigateur web et aller sur http://127.0.0.1:8888/ pour accéder à l'application Dash exécutée dans le conteneur Docker
+
+### Avec Jenkins
+
+
+
