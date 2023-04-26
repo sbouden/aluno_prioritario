@@ -3,19 +3,17 @@ pipeline {
    stages {
       stage('Build and Deploy') {
          steps {
-   // Clone le repository Git
-   git branch: 'apps', url: 'https://github.com/sbouden/aluno_prioritario.git'
+            // Clone le repository Git
+            git branch: 'apps', url: 'https://github.com/sbouden/aluno_prioritario.git'
 
-   // Aller dans app1
-   sh 'cd app1'
+            // Aller dans app1 et construire l'image Docker
+            dir('app1') {
+               sh 'docker build -t img-app1 .'
+            }
 
-
-   // Construit une image Docker à partir du Dockerfile
-   sh 'docker build -t img-app1 .'
-
-   // Lance le container Docker
-   sh 'docker run -p 8050:8050 img-app1'
-}
+            // Lance le container Docker
+            sh 'docker run -p 8050:8050 img-app1'
+         }
       }
    }
 }
