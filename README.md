@@ -69,6 +69,7 @@ Réitérer les mêmes étapes pour accéder à la 2ème application:
 8. Ouvrir un navigateur web et aller sur http://127.0.0.1:8888/ pour accéder à l'application Dash exécutée dans le conteneur Docker
 
 ### Avec Jenkins
+Le `jenkinsfile.groovy` définit les étapes de la pipeline de déploiement. Celles-ci incluent l'installation de docker, la construction de l'image docker, la prise en compte du dockerfile et l'installation des prérequis, dépendances et l'exécution de l'application.
 
-
-
+4. Cloner le repo Git contenant le Jenkinsfile et le Dockerfile sur sa machine
+5. Créer un projet Jenkins pour cette pipeline. Cela peut être fait en passant par l'interface graphique du navigateur et en créant un nouveau projet Jenkins de type "Pipeline script from SCM". On peut y ajouter le script de la pipeline, qui sera stocké dans un SCM (comme Git) et Jenkins pourra le récupérer pour l'exécuter. Si vous n'avez pas accès à l'interface web de votre serveur Jenkins pour lancer un build, vous pouvez utiliser la commande `jenkins build jenkinsfile.groovy`
