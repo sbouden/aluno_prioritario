@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    
+    // Définition des étapes de la pipeline
+    stages {
+        stage('Build and push Docker image for app1') {
+            steps {
+                // Checkout du code source de l'application 1
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/<username>/<repo>.git']]])
+                
+                // Construction de l'image Docker de l'application 1
+                sh 'docker build -t my-app1 .'
+                
+                // Authentification à Docker Hub
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    // Push de l'image Docker de l'application 1 vers Docker Hub
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh 'docker tag my-app1 <dockerhub-username>/my-app1'
+                    sh 'docker push <dockerhub-username>/my-app1'
+                }
+            }
+        }
+        stage('Deploy app1 to server1') {
+            steps {
+                // Connexion au serveur 1 via SSH
+                sshagent(['my-ssh-key']) {
+                    sh 'ssh user@server1 "docker login -u <dockerhub-username> -p <dockerhub-password> && docker pull <dockerhub-username>/my-app1 && docker run -d -p 8080:8080 --name my-app1 <dockerhub-username>/my-app1"'
+                }
+            }
+        }
+        stage('Build and push Docker image for app2') {
+            steps {
+                // Checkout du code source de l'application 2
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/<username>/<repo>.git']]])
+                
+                // Construction de l'image Docker de l'application 2
+                sh 'docker build -t my-app2 .'
+                
+                // Authentification à Docker Hub
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    // Push de l'image Docker de l'application 2 vers Docker Hub
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh 'docker tag my-app2 <dockerhub-username>/my-app2'
+                    sh 'docker push <dockerhub-username>/my-app2'
+                }
+            }
+        }
+        stage('Deploy app2 to server2') {
+            steps {
+                // Connexion au serveur 2 via SSH
+                sshagent(['my-ssh-key']) {
+                    sh 'ssh user@server2 "docker login -u <dockerhub-username> -p <dockerhub-password> && docker pull <dockerhub-username>/my-app2 && docker run -d -p 5000:5000 --name my-app2 <dockerhub-username>/my-app2"'
+                }
+            }
+        }
+    }
+}
